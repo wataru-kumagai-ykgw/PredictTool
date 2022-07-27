@@ -33,7 +33,7 @@
     - 学習・予測: 抜き出したデータと指定した予測手法を用いて、学習・予測する
     - 予測トレンド描画: 予測期間の実績値と予測値のトレンド図を描画する
 - Error処理
-    - 実行中でエラーが発生すると、``logフォルダに.log``をdumpする
+    - 実行中でエラーが発生すると、実行フォルダと同じ階層に``log``フォルダを作成し、``log.txt``をdumpする
 
 ## 前処理設定
 - ``[DEFAULT]``
@@ -67,9 +67,13 @@
         - Pythonの``scikit-learn(sklearn)``のパッケージを使用しているため、詳細はsklearnのマニュアル[URL][URL4]を参照
         - MLR: ``sklearn.linear_model.LinearRegression``
         - PLS: ``sklearn.cross_decomposition.PLSRegression``
-            - ハイパーパラメータはデフォルトで設定
         - Random Forest: ``sklearn.ensemble.RandomForestRegressor``
-            - ハイパーパラメータはデフォルトで設定
+- ``[PLS]``
+    - ``NumLV``: 潜在変数の数、``default = 2``
+- ``[RANDOMFOREST]``
+    - ``NumTree``: 木の数、``default = 100``
+    - ``MaxDepth``: 木の深さ、``default = None``
+    - ``MinSamplesSplit``: 葉内のサンプル数、``default = 2``
 
 ## 動作環境
 - Windows10
@@ -83,5 +87,5 @@
 
 [URL1]: <https://www.tepco.co.jp/forecast/html/download-j.html>
 [URL2]: <https://www.data.jma.go.jp/gmd/risk/obsdl/index.php>
-[URL3]: <https://scikit-learn.org/stable/index.html>
+[URL3]: <https://pandas.pydata.org/>
 [URL4]: <https://scikit-learn.org/stable/index.html>
