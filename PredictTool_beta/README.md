@@ -1,4 +1,4 @@
-# PredictTool
+# PredictTool_beta
 需要予測ツールbeta版の使い方
 
 ## dir構成
