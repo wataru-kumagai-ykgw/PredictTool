@@ -36,39 +36,39 @@
     - 実行中でエラーが発生すると、``logフォルダに.log``をdumpする
 
 ## 前処理設定
-- [DEFAULT]
-    - ``SplitTimestamp``: Trueにすると、Timestamp系変数を生成する
-        - timestamp形式は「yyyy/mm/dd HH:MM」 or 「yyyy-mm-dd HH:MM」しか対応していない
-    - EncodeLabel: Trueにすると、カテゴリ列をlabel-encodingする
-    - EncodeOnehot: Trueにすると、カテゴリ列をonehot-encodingする
-        - MLRとPLSはonehot-encoding必須、RFではonehot-encoding不要
-- [ENCODELABEL]
-    - EncodeLabel=Falseに設定した場合、この設定は無視される
-    - XList: label-encodingする列番号を指定（リスト形式で）
-        - XList=[0,2]の場合、ファイル3列目と5列目を指定している（timestampと目的変数の列はカウントしない）
-        - SplitTimestampで生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
-            - つまり、XList=[]に設定した場合、Timestamp系の列のみ適用される
+- ``[DEFAULT]``
+    - ``SplitTimestamp``: ``True``にすると、Timestamp系変数を生成する
+        - 現在、timestamp形式は``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``しか対応していない
+    - ``EncodeLabel``: ``True``にすると、カテゴリ列をlabel-encodingする
+    - ``EncodeOnehot``: ``True``にすると、カテゴリ列をonehot-encodingする
+        - ``MLR``と``PLS``はonehot-encoding必須、``RF``ではonehot-encoding不要
+- ``[ENCODELABEL]``
+    - ``EncodeLabel=False``に設定した場合、この設定は無視される
+    - ``XList``: label-encodingする列番号を指定（リスト形式で）
+        - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（timestampと目的変数の列はカウントしない）
+        - ``SplitTimestamp``で生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
+            - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
         - sklearnのLabelEncoderを使用しているため、詳細はsklearnのマニュアルを参照
 - [ENCODEONEHOT]
     - EncodeOnehot=Falseに設定した場合、この設定は無視される
     - XList: one-hot-encodingする列番号を指定（リスト形式で）
-        - XList=[0,2]の場合、ファイル3列目と5列目を指定している（timestampと目的変数の列はカウントしない）
+        - XList=[0,2]の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - SplitTimestampで生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、XList=[]に設定した場合、Timestamp系の列のみ適用される
-        - pandasのget_dummiesを使用しているため、詳細はpandasのマニュアルを参照
+        - Pythonの``pandas``のパッケージ``get_dummies``を使用しているため、詳細はpandasのマニュアル[URL][URL3]を参照
 
 ## 予測設定
-- [DEFAULT]
-    - XList: 説明変数として使用する列番号を指定
-        - XList=[0,2]の場合、ファイル3列目と5列目を指定している（timestampと目的変数の列はカウントしない）
-    - TraPeriod, PrePeriod: 学習期間・予測期間を指定
+- ``[DEFAULT]``
+    - ``XList``: 説明変数として使用する列番号を指定
+        - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
+    - ``TraPeriod``, ``PrePeriod``: 学習期間・予測期間を指定
         - timestampの形式: ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``（これ以外の形式の場合は自分で変換しておく必要がある）
-    - ModelingMode: 予測方法を指定（現在はMLR/PLS/RFのみ対応）
-        - Python.scikit-learn(sklearn)のパッケージを使用しているため、詳細はsklearnのマニュアル[URL][URL3]を参照
-        - MLR: sklearn.linear_model.LinearRegression
-        - PLS: sklearn.cross_decomposition.PLSRegression
+    - ``ModelingMode``: 予測方法を指定（現在は``MLR``/``PLS``/``RF``のみ対応）
+        - Pythonの``scikit-learn(sklearn)``のパッケージを使用しているため、詳細はsklearnのマニュアル[URL][URL4]を参照
+        - MLR: ``sklearn.linear_model.LinearRegression``
+        - PLS: ``sklearn.cross_decomposition.PLSRegression``
             - ハイパーパラメータはデフォルトで設定
-        - Random Forest: sklearn.ensemble.RandomForestRegressor
+        - Random Forest: ``sklearn.ensemble.RandomForestRegressor``
             - ハイパーパラメータはデフォルトで設定
 
 ## 動作環境
@@ -84,3 +84,4 @@
 [URL1]: <https://www.tepco.co.jp/forecast/html/download-j.html>
 [URL2]: <https://www.data.jma.go.jp/gmd/risk/obsdl/index.php>
 [URL3]: <https://scikit-learn.org/stable/index.html>
+[URL4]: <https://scikit-learn.org/stable/index.html>
