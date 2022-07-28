@@ -46,7 +46,7 @@
         - ただし、予測期間に応じて図をリサイズしないため、予測期間が長すぎると、見えづらくなる。
 - Error処理
     - exe実行中でエラーが発生すると、exeと同じフォルダに``log``フォルダを作成し、``log.txt``をdumpする。
-    - エラー内容が不明な場合、担当者に入力データ、設定ファイル、``log.txt``などの一式を送って問い合わせる。
+    - エラー内容が不明な場合、入力データ、設定ファイル、``log.txt``などのファイル一式を担当者に送って問い合わせる。
 
 
 ## input/outputのファイル形式
@@ -68,7 +68,7 @@
     - 各列: ``data_preprocessed.csv``から指定した目的変数・説明変数
     - 各行: ``data_preprocessed.csv``から指定した予測期間
 - ``output\predict.csv``: 学習済モデルに予測期間の説明変数を入力することで予測したデータ。予測ツールの結果、生成される。
-    - 各行: `data_preprocessed.csv``から指定した予測期間
+    - 各行: ``data_preprocessed.csv``から指定した予測期間
     - ``XX_pre``: 予測値
     - ``XX_act``: 実績値
 - ``output\predict.png``: ``predict.csv``のデータをトレンドにした描画した図。予測ツールの結果、生成される。
@@ -91,14 +91,14 @@
         - ``XList=[0,2]``の場合、``input/input.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - ``SplitTimestamp``で生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
-        - Python外部ライブラリ``scikit-learn(sklearn)``のパッケージ``LabelEncoder``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL3]を参照
+        - Python外部ライブラリ``scikit-learn(sklearn)``のパッケージ``LabelEncoder``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL4]を参照
 - [ENCODEONEHOT]
     - ``EncodeOnehot = False``に設定した場合、この設定は無視される
     - ``XList``: one-hot-encodingする列番号を指定（リスト形式で）
         - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
-        - SplitTimestampで生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
+        - ``SplitTimestamp``で生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
-        - Python外部ライブラリ``pandas``のパッケージ``get_dummies``を使用しているため、詳細は``pandas``のマニュアル[URL][URL4]を参照
+        - Python外部ライブラリ``pandas``のパッケージ``get_dummies``を使用しているため、詳細は``pandas``のマニュアル[URL][URL5]を参照
 
 ## 予測設定
 - ``Predict\predict_config.ini``の詳細。``input\data_preprocessed.csv``に対して学習・予測する条件を設定する。
@@ -115,7 +115,7 @@
             - ``MLR``: multi linear regression（線形重回帰）。線形回帰モデル。
             - ``PLS``: partial least squares regression（偏最小二乗回帰）。線形回帰モデル。
             - ``RF``: Random Forest。非線形回帰モデル。
-        - Python外部ライブラリ``scikit-learn(sklearn)``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL3]を参照
+        - Python外部ライブラリ``scikit-learn(sklearn)``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL4]を参照
             - MLR: ``sklearn.linear_model.LinearRegression``を使用。
             - PLS: ``sklearn.cross_decomposition.PLSRegression``を使用。
             - Random Forest: ``sklearn.ensemble.RandomForestRegressor``を使用。
@@ -140,5 +140,6 @@
 
 [URL1]: <https://www.tepco.co.jp/forecast/html/download-j.html>
 [URL2]: <https://www.data.jma.go.jp/gmd/risk/obsdl/index.php>
-[URL3]: <https://scikit-learn.org/stable/index.html>
-[URL4]: <https://pandas.pydata.org/>
+[URL3]: <https://pypi.org/project/jpholiday/>
+[URL4]: <https://scikit-learn.org/stable/index.html>
+[URL5]: <https://pandas.pydata.org/>
