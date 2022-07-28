@@ -28,18 +28,18 @@
     - 結果: ``output``に予測結果ファイル一式が出力・保存される
 
 ## 機能
-- ``preprocessing.exe``：``input/input.csv``に対して、下記機能を実行する。
+- ``preprocessing.exe``：``input\input.csv``に対して、下記機能を実行する。
     - フィルタリング: 空白要素があれば、その行を自動でフィルタリングする。
     - データ加工: 入力データを予測するための変数に変換・加工する。
         - Timestampの分離: Timestamp列から新たな変数を追加する
             - 年／月／日／時刻／曜日／休日用変数を自動的に追加する
             - ただし、休日用変数は__日本のカレンダーから祝日のみを抽出__している。
                 - 土曜／日曜は曜日用変数に含まれるため、除外している
-                - 日本国外データの場合は上記の祝日を使わず、各自で``input/input.csv``に休日用変数を追加する
-                - 例えば12月31日などは祝日として扱われないため、厳密な休日用変数ではない。必要に応じて、各自で``input/``data_preprocessed.csv``の休日用変数を修正する
+                - 日本国外データの場合は上記の祝日を使わず、各自で``input\input.csv``に休日用変数を追加する
+                - 例えば12月31日などは祝日として扱われないため、厳密な休日用変数ではない。必要に応じて、各自で``input\``data_preprocessed.csv``の休日用変数を修正する
         - Label-Encoding: カテゴリ列をlabel-encodingし、ラベル（整数値）に変換する
         - Onehot-Encoding: カテゴリ列をonehot-encodingし、バイナリ（0-1）に変換する
-- ``predict.exe``：``input/``data_preprocessed.csv``に対して、下記機能を実行する。
+- ``predict.exe``：``input\data_preprocessed.csv``に対して、下記機能を実行する。
     - 期間・変数設定: 入力データから学習・予測に使用する部分を抜き出す。
     - 学習・予測: 指定したデータと指定した予測手法を用いて、学習・予測する。
     - 予測トレンド描画: 予測期間の実績値と予測値のトレンド図を描画する。
@@ -51,33 +51,33 @@
 
 ## input/outputのファイル形式
 - 入力データ以外は、実行の度に同じファイル名で上書きされる。上書きされたくない場合はoutputフォルダ毎、リネームしておく。
-- ``input/input.csv``: 入力データ。
+- ``input\input.csv``: 入力データ。
     - 1行目: 各列の名称。``timestamp``以外の列名は、空でなければ何を入力しても結果には影響しない。 
     - 2行目以降: 数値データ
     - 1列目: timestamp。``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式以外は受け付けない（これ以外の形式の場合は自分で変換しておく必要がある）
     - 2列目: 目的変数
     - 3列目以降: 説明変数
-- ``input/data_preprocessed.csv``: 加工済データ。前処理ツールの結果、生成される。
+- ``input\data_preprocessed.csv``: 加工済データ。前処理ツールの結果、生成される。
     - 1列目: timestamp（フィルタリングによって削除された行は、復元されない）
     - 2列目: 目的変数
     - 3列目以降: 説明変数（データ加工によって新規に生成した変数が追加されている）
-- ``output/tra.csv``: 学習期間に該当するデータ。予測ツールの結果、生成される。
+- ``output\tra.csv``: 学習期間に該当するデータ。予測ツールの結果、生成される。
     - 各列: ``data_preprocessed.csv``から指定した目的変数・説明変数
     - 各行: ``data_preprocessed.csv``から指定した学習期間
-- ``output/val.csv``: 予測期間に該当するデータ。予測ツールの結果、生成される。
+- ``output\val.csv``: 予測期間に該当するデータ。予測ツールの結果、生成される。
     - 各列: ``data_preprocessed.csv``から指定した目的変数・説明変数
     - 各行: ``data_preprocessed.csv``から指定した予測期間
-- ``output/predict.csv``: 学習済モデルに予測期間の説明変数を入力することで予測したデータ。予測ツールの結果、生成される。
+- ``output\predict.csv``: 学習済モデルに予測期間の説明変数を入力することで予測したデータ。予測ツールの結果、生成される。
     - 各行: `data_preprocessed.csv``から指定した予測期間
     - ``XX_pre``: 予測値
     - ``XX_act``: 実績値
-- ``output/predict.png``: ``predict.csv``のデータをトレンドにした描画した図。予測ツールの結果、生成される。
+- ``output\predict.png``: ``predict.csv``のデータをトレンドにした描画した図。予測ツールの結果、生成される。
     - 橙線は予測値
     - 青線は実績値
 
 
 ## 前処理設定
-- ``Preprocessing\preprocessing_config.ini``の詳細。``input/input.csv``に対して前処理する条件を設定する。
+- ``Preprocessing\preprocessing_config.ini``の詳細。``input\input.csv``に対して前処理する条件を設定する。
 - ``[DEFAULT]``
     - ``SplitTimestamp``: ``True``にすると、Timestamp系変数を生成する。``False``にすると、Timestamp系変数を生成しない。
         - 現在、timestamp形式は``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``しか対応していない
@@ -101,13 +101,13 @@
         - Python外部ライブラリ``pandas``のパッケージ``get_dummies``を使用しているため、詳細は``pandas``のマニュアル[URL][URL4]を参照
 
 ## 予測設定
-- ``Predict\predict_config.ini``の詳細。``input/data_preprocessed.csv``に対して学習・予測する条件を設定する。
+- ``Predict\predict_config.ini``の詳細。``input\data_preprocessed.csv``に対して学習・予測する条件を設定する。
 - ``[DEFAULT]``
     - ``XList``: 説明変数として使用する列番号を指定
-        - ``XList=[0,2]``の場合、``input/data_preprocessed.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
-        - ``input/data_preprocessed.csv``を直接確認しながら、列番号を指定すれば良い
+        - ``XList=[0,2]``の場合、``input\data_preprocessed.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
+        - ``input\data_preprocessed.csv``を直接確認しながら、列番号を指定すれば良い
     - ``TraPeriod``, ``PrePeriod``: 学習期間・予測期間を指定
-        - ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式のみ受け付ける（``input/data_preprocessed.csv``の``timestmap``の形式に合わせれば良い）
+        - ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式のみ受け付ける（``input\data_preprocessed.csv``の``timestmap``の形式に合わせれば良い）
     - ``ModelingMode``: 予測方法を指定
         - ``MLR``/``PLS``/``RF``の3種類から選ぶ。推奨設定（default）は``ModelingMode = RF``。
             - ``MLR``: multi linear regression（線形重回帰）。線形回帰モデル。
