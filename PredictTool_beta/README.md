@@ -36,7 +36,7 @@
             - ただし、休日用変数は__日本のカレンダーから祝日のみを抽出__している。
                 - 土曜／日曜は曜日用変数に含まれるため、除外している
                 - 日本国外データの場合は上記の祝日を使わず、各自で``input\input.csv``に休日用変数を追加する
-                - 例えば12月31日などは祝日として扱われないため、厳密な休日用変数ではない。必要に応じて、各自で``input\``data_preprocessed.csv``の休日用変数を修正する
+                - 例えば12月31日などは祝日として扱われないため、厳密な休日用変数ではない。必要に応じて、各自で``input\data_preprocessed.csv``の休日用変数を修正する
         - Label-Encoding: カテゴリ列をlabel-encodingし、ラベル（整数値）に変換する
         - Onehot-Encoding: カテゴリ列をonehot-encodingし、バイナリ（0-1）に変換する
 - ``predict.exe``：``input\data_preprocessed.csv``に対して、下記機能を実行する。
@@ -107,7 +107,7 @@
         - ``XList=[0,2]``の場合、``input\data_preprocessed.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - ``input\data_preprocessed.csv``を直接確認しながら、列番号を指定すれば良い
     - ``TraPeriod``, ``PrePeriod``: 学習期間・予測期間を指定
-        - ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式のみ受け付ける（``input\data_preprocessed.csv``の``timestmap``の形式に合わせれば良い）
+        - ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式のみ受け付ける（``input\data_preprocessed.csv``の``timestamp``の形式に合わせれば良い）
     - ``ModelingMode``: 予測方法を指定
         - ``MLR``/``PLS``/``RF``の3種類から選ぶ。推奨設定（default）は``ModelingMode = RF``。
             - ``MLR``: multi linear regression（線形重回帰）。線形回帰モデル。
