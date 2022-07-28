@@ -32,8 +32,9 @@
     - フィルタリング: 空白要素があれば、その行を自動でフィルタリングする。
     - データ加工: 入力データを予測するための変数に変換・加工する。
         - Timestampの分離: Timestamp列から新たな変数を追加する
-            - 年／月／日／時刻／曜日を自動的に追加
-            - ただし、曜日から平日／土日を判別できるが、祝日は判別できない。平日／休日用の変数を厳密に学習したいなら、事前に追加しておく。
+            - 年／月／日／時刻／曜日／祝日を自動的に追加
+            - ただし、祝日用変数は日本の祝日のみ対応しているため、日本国外のデータの場合は上記の祝日を使わず、自分で祝日用変数を追加する必要がある。
+            - ただし、カレンダー上の祝日のみを抽出しているため、「休日かどうか」をより厳密に学習したいなら、自分で祝日用変数を修正する必要がある。
         - Label-Encoding: カテゴリ列をlabel-encodingし、ラベル（整数値）に変換する
         - Onehot-Encoding: カテゴリ列をonehot-encodingし、バイナリ（0-1）に変換する
 - ``predict.exe``：``input/``data_preprocessed.csv``に対して、下記機能を実行する。
@@ -78,6 +79,7 @@
 - ``[DEFAULT]``
     - ``SplitTimestamp``: ``True``にすると、Timestamp系変数を生成する。``False``にすると、Timestamp系変数を生成しない。
         - 現在、timestamp形式は``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``しか対応していない
+        - 現在、日本の祝日抽出は、Python外部ライブラリ``jpholiday``を使用しているため、詳細は``jpholiday``のマニュアル[URL][URL3]を参照
     - ``EncodeLabel``: ``True``にすると、カテゴリ列をlabel-encodingする。``False``にすると、label-encodingしない。
     - ``EncodeOnehot``: ``True``にすると、カテゴリ列をonehot-encodingする。``False``にすると、onehot-encodingしない。
         - ``MLR``と``PLS``を使う場合、onehot-encoding必須、``RF``を使う場合、onehot-encoding不要
@@ -87,14 +89,14 @@
         - ``XList=[0,2]``の場合、``input/input.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - ``SplitTimestamp``で生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
-        - Python外部ライブラリ``sklearn``のパッケージ``LabelEncoder``を使用しているため、詳細はsklearnのマニュアル[URL][URL3]を参照
+        - Python外部ライブラリ``scikit-learn(sklearn)``のパッケージ``LabelEncoder``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL3]を参照
 - [ENCODEONEHOT]
     - ``EncodeOnehot = False``に設定した場合、この設定は無視される
     - XList: one-hot-encodingする列番号を指定（リスト形式で）
         - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - SplitTimestampで生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
-        - Python外部ライブラリ``pandas``のパッケージ``get_dummies``を使用しているため、詳細はpandasのマニュアル[URL][URL4]を参照
+        - Python外部ライブラリ``pandas``のパッケージ``get_dummies``を使用しているため、詳細は``pandas``のマニュアル[URL][URL4]を参照
 
 ## 予測設定
 - ``Predict\predict_config.ini``の詳細。``input/data_preprocessed.csv``に対して学習・予測する条件を設定する。
@@ -109,7 +111,7 @@
             - ``MLR``: multi linear regression（線形重回帰）。線形回帰モデル。
             - ``PLS``: partial least squares regression（偏最小二乗回帰）。線形回帰モデル。
             - ``RF``: Random Forest。非線形回帰モデル。
-        - Python外部ライブラリ``scikit-learn(sklearn)``を使用しているため、詳細はsklearnのマニュアル[URL][URL3]を参照
+        - Python外部ライブラリ``scikit-learn(sklearn)``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL3]を参照
             - MLR: ``sklearn.linear_model.LinearRegression``を使用。
             - PLS: ``sklearn.cross_decomposition.PLSRegression``を使用。
             - Random Forest: ``sklearn.ensemble.RandomForestRegressor``を使用。
