@@ -38,7 +38,9 @@
                 - 日本国外データの場合は上記の祝日を使わず、各自で``input\input.csv``に休日用変数を追加する
                 - 例えば12月31日などは祝日として扱われないため、厳密な休日用変数ではない。必要に応じて、各自で``input\data_preprocessed.csv``の休日用変数を修正する
         - Label-Encoding: カテゴリ列をlabel-encodingし、ラベル（整数値）に変換する
+            - example (Table 1): [Wind_Direction] --> [Wind_Direction_label]
         - Onehot-Encoding: カテゴリ列をonehot-encodingし、バイナリ（0-1）に変換する
+            - example (Table 2): [Wind_Direction] --> [Wind_Direction_East,Wind_Direction_West,Wind_Direction_South,Wind_Direction_North]
 - ``predict.exe``：``input\data_preprocessed.csv``に対して、下記機能を実行する。
     - 期間・変数設定: 入力データから学習・予測に使用する部分を抜き出す。
     - 学習・予測: 指定したデータと指定した予測手法を用いて、学習・予測する。
@@ -47,6 +49,26 @@
 - Error処理
     - exe実行中でエラーが発生すると、exeと同じフォルダに``log``フォルダを作成し、``log.txt``をdumpする。
     - エラー内容が不明な場合、入力データ、設定ファイル、``log.txt``などのファイル一式を担当者に送って問い合わせる。
+
+Table 1: label-encoding
+| Wind_Direction | Wind_Direction_label |
+| -------------- | -------------------- |
+| East  |  1  |
+| West  |  2  |
+| South |  3  |
+| North |  4  |
+| East  |  1  |
+| North |  4  |
+
+Table 2: onehot-encoding
+| Wind_Direction | Wind_Direction_East | Wind_Direction_West | Wind_Direction_South | Wind_Direction_North |
+| -------------- | ------------------- | ------------------- | -------------------- | -------------------- |
+| East  |  1  |  0  |  0  |  0  |
+| West  |  0  |  1  |  0  |  0  |
+| South |  0  |  0  |  1  |  0  |
+| North |  0  |  0  |  0  |  1  |
+| East  |  1  |  0  |  0  |  0  |
+| North |  0  |  0  |  0  |  1  |
 
 
 ## input/outputのファイル形式
