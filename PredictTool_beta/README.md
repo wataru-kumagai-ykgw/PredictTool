@@ -73,21 +73,22 @@
 
 
 ## 前処理設定
+- ``Preprocessing\preprocessing_config.ini``の詳細。``input/input.csv``に対して前処理する条件を設定する。
 - ``[DEFAULT]``
-    - ``SplitTimestamp``: ``True``にすると、Timestamp系変数を生成する
+    - ``SplitTimestamp``: ``True``にすると、Timestamp系変数を生成する。``False``にすると、Timestamp系変数を生成しない。
         - 現在、timestamp形式は``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``しか対応していない
-    - ``EncodeLabel``: ``True``にすると、カテゴリ列をlabel-encodingする
-    - ``EncodeOnehot``: ``True``にすると、カテゴリ列をonehot-encodingする
+    - ``EncodeLabel``: ``True``にすると、カテゴリ列をlabel-encodingする。``False``にすると、label-encodingしない。
+    - ``EncodeOnehot``: ``True``にすると、カテゴリ列をonehot-encodingする。``False``にすると、onehot-encodingしない。
         - ``MLR``と``PLS``を使う場合、onehot-encoding必須、``RF``を使う場合、onehot-encoding不要
 - ``[ENCODELABEL]``
-    - ``EncodeLabel=False``に設定した場合、この設定は無視される
+    - ``EncodeLabel = False``に設定した場合、この設定は無視される
     - ``XList``: label-encodingする列番号を指定（リスト形式で）
-        - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
+        - ``XList=[0,2]``の場合、``input/input.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - ``SplitTimestamp``で生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
         - Python外部ライブラリ``sklearn``のパッケージ``LabelEncoder``を使用しているため、詳細はsklearnのマニュアル[URL][URL3]を参照
 - [ENCODEONEHOT]
-    - EncodeOnehot=Falseに設定した場合、この設定は無視される
+    - ``EncodeOnehot = False``に設定した場合、この設定は無視される
     - XList: one-hot-encodingする列番号を指定（リスト形式で）
         - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
         - SplitTimestampで生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
@@ -95,22 +96,30 @@
         - Python外部ライブラリ``pandas``のパッケージ``get_dummies``を使用しているため、詳細はpandasのマニュアル[URL][URL4]を参照
 
 ## 予測設定
+- ``Predict\predict_config.ini``の詳細。``input/data_preprocessed.csv``に対して学習・予測する条件を設定する。
 - ``[DEFAULT]``
     - ``XList``: 説明変数として使用する列番号を指定
-        - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
+        - ``XList=[0,2]``の場合、``input/data_preprocessed.csv``の3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
+        - ``input/data_preprocessed.csv``を直接確認しながら、列番号を指定すれば良い
     - ``TraPeriod``, ``PrePeriod``: 学習期間・予測期間を指定
-        - timestampの形式: ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``（これ以外の形式の場合は自分で変換しておく必要がある）
-    - ``ModelingMode``: 予測方法を指定（現在は``MLR``/``PLS``/``RF``のみ対応）
+        - ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式のみ受け付ける（``input/data_preprocessed.csv``の``timestmap``の形式に合わせれば良い）
+    - ``ModelingMode``: 予測方法を指定
+        - ``MLR``/``PLS``/``RF``の3種類から選ぶ。推奨設定（default）は``ModelingMode = RF``。
+            - ``MLR``: multi linear regression（線形重回帰）。線形回帰モデル。
+            - ``PLS``: partial least squares regression（偏最小二乗回帰）。線形回帰モデル。
+            - ``RF``: Random Forest。非線形回帰モデル。
         - Python外部ライブラリ``scikit-learn(sklearn)``を使用しているため、詳細はsklearnのマニュアル[URL][URL3]を参照
-            - MLR: ``sklearn.linear_model.LinearRegression``
-            - PLS: ``sklearn.cross_decomposition.PLSRegression``
-            - Random Forest: ``sklearn.ensemble.RandomForestRegressor``
-- ``[PLS]``: PLS用のハイパーパラメータ。これ以外の設定は外部ライブラリのデフォルトが適用される。
-    - ``NumLV``: 潜在変数の数。``default = 2``
-- ``[RANDOMFOREST]``: Random Forest用のハイパーパラメータ。これ以外の設定は外部ライブラリのデフォルトが適用される。
-    - ``NumTree``: 木の数。``default = 100``
-    - ``MaxDepth``: 木の深さ。``default = None``
-    - ``MinSamplesSplit``: 葉内のサンプル数。``default = 2``
+            - MLR: ``sklearn.linear_model.LinearRegression``を使用。
+            - PLS: ``sklearn.cross_decomposition.PLSRegression``を使用。
+            - Random Forest: ``sklearn.ensemble.RandomForestRegressor``を使用。
+- ``[PLS]``: PLS用のハイパーパラメータ。
+    - ``NumLV``: 潜在変数の数。推奨設定（default）は``NumLV = 2``。
+    - これ以外のパラメータは外部ライブラリのデフォルトが適用される。
+- ``[RANDOMFOREST]``: Random Forest用のハイパーパラメータ。
+    - ``NumTree``: 木の数。推奨設定（default）は``NumTree = 100``。
+    - ``MaxDepth``: 木の深さ。推奨設定（default）は``MaxDepth = None``。
+    - ``MinSamplesSplit``: 葉内のサンプル数。推奨設定（default）は``MinSamplesSplit = 2``。
+    - これ以外のパラメータは外部ライブラリのデフォルトが適用される。
 
 ## 動作環境
 - Windows10
