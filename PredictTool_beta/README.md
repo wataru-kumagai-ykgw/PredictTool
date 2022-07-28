@@ -92,7 +92,7 @@
         - ``SplitTimestamp``で生成した列は、ここで指定する必要が無い（自動でencodeの対象となる）
             - つまり、``XList=[]``に設定した場合、Timestamp系の列のみ適用される
         - Python外部ライブラリ``scikit-learn(sklearn)``のパッケージ``LabelEncoder``を使用しているため、詳細は``sklearn``のマニュアル[URL][URL4]を参照
-- [ENCODEONEHOT]
+- ``[ENCODEONEHOT]``
     - ``EncodeOnehot = False``に設定した場合、この設定は無視される
     - ``XList``: one-hot-encodingする列番号を指定（リスト形式で）
         - ``XList=[0,2]``の場合、ファイル3列目と5列目を指定している（``timestamp``と目的変数の列はカウントしない）
