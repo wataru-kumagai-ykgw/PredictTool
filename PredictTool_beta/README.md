@@ -108,6 +108,8 @@
         - ``input\data_preprocessed.csv``を直接確認しながら、列番号を指定すれば良い
     - ``TraPeriod``, ``PrePeriod``: 学習期間・予測期間を指定
         - ``yyyy/mm/dd HH:MM`` or ``yyyy-mm-dd HH:MM``の形式のみ受け付ける（``input\data_preprocessed.csv``の``timestamp``の形式に合わせれば良い）
+        - ``input\data_preprocessed.csv``に含まれていない学習期間・予測期間を設定すると、エラーとなる。
+            - 目的変数の実績値が欠落しているが予測したい期間がある場合、前処理の前に、``input\input.csv``内の該当する期間の目的変数に0を入れておく。（空だとフィルタリングで除外されるため）
     - ``ModelingMode``: 予測方法を指定
         - ``MLR``/``PLS``/``RF``の3種類から選ぶ。推奨設定（default）は``ModelingMode = RF``。
             - ``MLR``: multi linear regression（線形重回帰）。線形回帰モデル。
