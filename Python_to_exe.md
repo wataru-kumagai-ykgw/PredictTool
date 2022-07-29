@@ -140,7 +140,7 @@ hidden-import = ['sklearn.utils._typedefs','sklearn.utils._heap', 'sklearn.utils
 - ``workdir\dist\execute.exe``を``workdir``（``execute.py``と同じ階層）に移動させる。
   - データや自作ライブラリのインポート、データの出力・保存などは、``execute.py``の位置を基準に相対パスにしているはずなので、``execute.py``と同じ階層でexeを実行する
 - ``workdir\execute.exe``をダブルクリックすると、実行される。
-  - ただし、計算が正常に完了したのか、途中でエラーが起こったのか判別がつかないため、try構文でexceptionをキャッチし、logファイルにdumpするなど、工夫しておく
+  - ただし、計算が正常に完了したのか、途中でエラーが起こったのか判別がつかないため、try~except構文でExceptionをキャッチし、logファイルをdumpするなど、工夫しておく
   - 外部ライブラリを含む場合、サブモジュールが正しくインポートできずに``ModuleNotFoundError``が発生することがある
     - ``workdir\execute.spec``内の``hidden-import``にそのサブモジュールを直接追記し、再度exe化し直す
 
