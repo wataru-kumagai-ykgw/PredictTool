@@ -108,13 +108,17 @@ numpy                             1.21.2
 ````
 
 ### 手順6：仮想環境上でのexe化
-- 仮想環境上で``pyinstaller``によって、下記の設定をつけた状態で、``execute.py``をexe化する。
-  - ``--onefile``：一つのexeファイルにまとめる
-  - ``--clean``：exe化の度にクリーンする
+- 仮想環境上で``pyinstaller``によって、下記のオプションをつけた状態で、``execute.py``をexe化する。
+  - ``--onefile``：出力を一つのexeファイルにまとめる
+  - ``--clean``：ビルド前に前回のキャッシュと出力ディレクトリを削除
+  - 他にも、下記などがあるが、お好みで設定する。
+    - ``--onedir``: 出力を1ディレクトリにまとめる
+    - ``--noconsole``: コンソールを表示しない（ただし、exeを実行したとき、コンソールが表示されないと、実行しているかどうかが判別しにくくなる）
 
 ````shell
 (workdir) ~\workdir $ pyinstaller execute.py --onefile --clean
 ````
+
 
 - ``workdir``内に``dist``と``build``フォルダが作成され、``workdir\dist\execute.exe``が作成される。
 
