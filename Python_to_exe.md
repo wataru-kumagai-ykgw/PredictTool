@@ -34,6 +34,24 @@ import sklearn
 ...
 ``` 
 
+- ``execute.py``で``work_path``を取得するときは、下記のように``directly_flag``で切り替えられるようにしておく。
+  - exeファイルで実行するときとpythonファイルで実行する場合で、``work_path``の認識がどうやら異なるらしい。
+  - pythonファイルで実行する前: ``directly_flag = True``と設定
+  - pythonファイルをexe化する前: ``directly_flag = False``と設定
+
+```python 
+[workdir\execute.py]
+import os
+
+directly_flag = True
+if directly_flag:
+    work_path = os.path.dirname( os.path.abspath(__file__) )
+else:
+    work_path = os.getcwd()
+os.chdir(work_path)
+``` 
+
+
 ### 手順3：パッケージインストール用ファイル作成
 - 対象pythonファイル``execute.py``で使用するパッケージを``workdir\requiremenets.txt``に書く。
   - exe化のために``pyinstaller``は必須
@@ -59,7 +77,7 @@ sklearn
   - ``workdir``内に仮想環境情報が記載されている``Pipfile``が作成される。
 
 ````cmd
-[local] ~/workdir $ pipenv --python 3.9
+[local] ~\workdir $ pipenv --python 3.9
 ````
 
 - pipenvコマンドで、仮想環境内に``workdir\requiremenets.txt``に書いたパッケージをインストールする。
@@ -67,21 +85,21 @@ sklearn
   - 完了すると、``Pipfile.lock``が作成される。
 
 ````cmd
-[local] ~/workdir $ pipenv install -r requirements.txt
+[local] ~\workdir $ pipenv install -r requirements.txt
 ````
 
 ### 手順5：仮想環境内への移動
 - pipenvコマンドで、仮想環境内に移動する。
 
 ````cmd
-[local] ~/workdir $ pipenv shell
-(workdir) ~/workdir $ 
+[local] ~\workdir $ pipenv shell
+(workdir) ~\workdir $ 
 ````
 
 - ``pip list``コマンドで、仮想環境内にインストールされたパッケージを確認できる。
 
 ````shell
-(workdir) ~/workdir $ pip list
+(workdir) ~\workdir $ pip list
 Package                           Version
 --------------------------------- ---------
 matplotlib                        3.4.3
@@ -95,7 +113,7 @@ numpy                             1.21.2
   - ``--clean``：exe化の度にクリーンする
 
 ````shell
-(workdir) ~/workdir $ pyinstaller execute.py --onefile --clean
+(workdir) ~\workdir $ pyinstaller execute.py --onefile --clean
 ````
 
 - ``workdir``内に``dist``と``build``フォルダが作成され、``workdir\dist\execute.exe``が作成される。
@@ -103,7 +121,7 @@ numpy                             1.21.2
 
 #### サブモジュールのインポート問題の対処方法
 - ただし、``sklearn``などの外部ライブラリを含む場合、exeを実行したときに``ModuleNotFoundError``が発生することがある。
-  - いくつかの外部ライブラリを含んでexe化すると、サブモジュールがインポートできないことがあるらしく、下記のエラーメッセージが出る。
+  - いくつかの外部ライブラリを含んでexe化すると、サブモジュールが正しくインポートできないことがあるらしく、下記のエラーメッセージが出る。
   - ``ModuleNotFoundError: No module named ** to hidden-import in execute.spec``
 - そこで、ModuleNotFoundErrorが出るサブモジュールをspecファイル``workdir\execute.spec``内の``hidden-import``に直接記述する。
   - ``sklearn``の場合、下記を``hidden-import``に追加する
@@ -115,17 +133,16 @@ hidden-import = ['sklearn.utils._typedefs','sklearn.utils._heap', 'sklearn.utils
 - 次に、``pyinstaller``で、specファイル``workdir\execute.spec``を直接実行し、exeファイルを再作成（修正）する。
 
 ````shell
-(workdir) ~/workdir $ pyinstaller execute.spec
+(workdir) ~\workdir $ pyinstaller execute.spec
 ````
-
-- ただし、``sklearn``などの外部ライブラリを含む場合、exeを実行したときに``ModuleNotFoundError``が発生することがある。
-
 
 ### 手順7：exeファイルの実行
 - ``workdir\dist\execute.exe``を``workdir``（``execute.py``と同じ階層）に移動させる。
   - データや自作ライブラリのインポート、データの出力・保存などは、``execute.py``の位置を基準に相対パスにしているはずなので、``execute.py``と同じ階層でexeを実行する
 - ``workdir\execute.exe``をダブルクリックすると、実行される。
   - ただし、計算が正常に完了したのか、途中でエラーが起こったのか判別がつかないため、try構文でexceptionをキャッチし、logファイルにdumpするなど、工夫しておく
+  - 外部ライブラリを含む場合、サブモジュールが正しくインポートできずに``ModuleNotFoundError``が発生することがある
+    - ``workdir\execute.spec``内の``hidden-import``にそのサブモジュールを直接追記し、再度exe化し直す
 
 
 ## 開発履歴
