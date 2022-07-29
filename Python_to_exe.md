@@ -3,7 +3,7 @@ Pythonコード（``.py``）をexeファイルに変換する方法
 
 ## 利用ツール
 - 下記を利用した方法を説明する。
-  - ``pyinstaller``: exe変換するための外部ライブラリ。
+  - ``pyinstaller``: exe変換するためのライブラリ。
     - sklearnなどの外部ライブラリのパッケージはそのままexe化できない。exe化の前に、別途インポートが必要なサブモジュールを手動で設定しておく必要がある。
   - ``pipenv``: 仮想環境用の外部ライブラリ。``pip``（パッケージ管理）と``venv``（仮想環境構築）をまとめて使えるツール。
     - ローカル環境でexe化すると、exeファイルのサイズがかなり大きくなる。
@@ -13,6 +13,7 @@ Pythonコード（``.py``）をexeファイルに変換する方法
 ## 手順
 ### 手順1：pipenvのインストール
 - ローカル環境に``pipenv``をインストールする。
+  - proxy設定は済ませておくこと
 
 ```cmd
 [local] $ pip install pipenv
@@ -47,7 +48,7 @@ sklearn
 ``` 
 
 ### 手順4：仮想環境構築
-- コマンドプロンプトを起動し、currentディレクトリを``workdir``まで移動する。
+- コマンドプロンプトを起動し、currentディレクトリを``workdir``まで移動させる。
 
 ````cmd
 [local] $ cd workdir
@@ -68,7 +69,7 @@ sklearn
 [local] ~/workdir $ pipenv install -r requirements.txt
 ````
 
-### 手順5
+### 手順5：仮想環境内への移動
 - pipenvコマンドで、仮想環境内に移動する。
 
 ````cmd
@@ -87,7 +88,8 @@ numpy                             1.21.2
 ...
 ````
 
-- 仮想環境上で``pyinstaller``によって、``execute.py``をexe化する。
+### 手順6：仮想環境上でのexe化
+- 仮想環境上で``pyinstaller``によって、下記の設定をつけた状態で、``execute.py``をexe化する。
   - ``--onefile``：一つのexeファイルにまとめる
   - ``--clean``：exe化の度にクリーンする
 
@@ -95,19 +97,33 @@ numpy                             1.21.2
 (workdir) ~/workdir $ pyinstaller execute.py --onefile --clean
 ````
 
-### 手順6
-- ``sklearn``などを含む場合、``ModuleNotFoundError``が発生する。
-  - ``ModuleNotFoundError: No module named ** to hidden-import in predict.spec``
-- ModuleNotFoundErrorでひっかかるmoduleを``execute.spec``内の``hidden-import``に追加する。
-  - ``sklearn``の場合、下記を追加
+- ``workdir``内に``dist``と``build``フォルダが作成され、``workdir\dist\execute.exe``が作成される。
+
+
+#### サブモジュールのインポート問題の対処方法
+- ただし、``sklearn``などの外部ライブラリを含む場合、exeを実行したときに``ModuleNotFoundError``が発生することがある。
+  - いくつかの外部ライブラリを含んでexe化すると、サブモジュールがインポートできないことがあるらしく、下記のエラーメッセージが出る。
+  - ``ModuleNotFoundError: No module named ** to hidden-import in execute.spec``
+- そこで、ModuleNotFoundErrorが出るサブモジュールをspecファイル``workdir\execute.spec``内の``hidden-import``に直接記述する。
+  - ``sklearn``の場合、下記を``hidden-import``に追加する
+
 ````spec
 hidden-import = ['sklearn.utils._typedefs','sklearn.utils._heap', 'sklearn.utils._sorting', 'sklearn.utils._vector_sentinel', 'sklearn.neighbors._partition_nodes']
 ````
+
+- 次に、``pyinstaller``で、specファイル``workdir\execute.spec``を直接実行し、exeファイルを再作成（修正）する。
 
 ````shell
 (workdir) ~/workdir $ pyinstaller execute.spec
 ````
 
+- ただし、``sklearn``などの外部ライブラリを含む場合、exeを実行したときに``ModuleNotFoundError``が発生することがある。
+
+
+### 手順7：exeファイルの実行
+- ``workdir\dist\execute.exe``を``workdir``（``execute.py``と同じ階層）に移動させる。
+  - データや自作ライブラリのインポート、データの出力・保存などは、``execute.py``の位置を基準に相対パスにしているはずなので、``execute.py``と同じ階層でexeを実行する
+- ``workdir``
 
 
 ## 開発履歴
